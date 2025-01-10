@@ -1,16 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: kubelab-application
+  name: kubelab-apps
   namespace: argocd
 spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    path: apps/kubelab-app
-    repoURL: https://github.com/Justappl/kubelab-incluster
-    targetRevision: HEAD
-  syncPolicy:
-    automated: {}
+  generators:
+  - list:
+      elements:
+      - env: dev
+      - env: staging
+      - env: production
+  template:
+    metadata:
+      name: kubelab-app-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/<dein-github-username>/kubelab-incluster
+        targetRevision: HEAD
+        path: apps/kubelab-app
+      destination:
+        namespace: default
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
