@@ -16,7 +16,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/<dein-github-username>/kubelab-incluster
+        repoURL: https://github.com/Justappl/kubelab-incluster
         targetRevision: HEAD
         path: apps/kubelab-app
       destination:
